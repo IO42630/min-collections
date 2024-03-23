@@ -1,11 +1,12 @@
 package com.olexyn;
 
 import java.time.Instant;
+import java.util.Map.Entry;
 
 import com.olexyn.min.entries.AEntry;
 import lombok.Getter;
 
-public class TimeCube {
+public class TimeCube implements NavigableCube {
 
 	@Getter
 	private final Instant start;
@@ -63,5 +64,25 @@ public class TimeCube {
 		}
 		return new int[] { aIdx, bIdx };
 	}
+
+
+	@Override
+	public Instant lowerKey(Instant key) {
+		return lowerEntry(key).getKey();
+	}
+
+	@Override
+	public Entry<Instant, Object> lowerEntry(Instant key) {
+		long idx = getIndex(key);
+		var cords = getCoords(idx);
+		if (cords[1] == 0) {
+			if (cords[0] == 0) {
+				return null;
+			}
+			return arr[cords[0] - 1][size - 1];
+		}
+		return arr[cords[0]][cords[1] - 1];
+	}
+
 
 }

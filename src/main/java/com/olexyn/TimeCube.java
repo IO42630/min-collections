@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import com.olexyn.min.entries.AEntry;
 import lombok.Getter;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class TimeCube implements NavigableCube {
 
@@ -61,17 +62,14 @@ public class TimeCube implements NavigableCube {
 	private void put(long index, AEntry<Instant, Object> value) {
 		var coords = getCoords(index);
 		arr[coords[0]][coords[1]] = value;
-		if (first[0] >= coords[0]) {
-			first[0] = coords[0];
-			if (first[1] > coords[1]) {
+		if (first[0] > coords[0] || (first[0] == coords[0] && first[1] > coords[1])) {
+				first[0] = coords[0];
 				first[1] = coords[1];
-			}
 		}
-		if (last[0] <= coords[0]) {
-			last[0] = coords[0];
-			if (last[1] < coords[1]) {
+		if (last[0] < coords[0] || ( last[0] == coords[0] && last[1] < coords[1])) {
+				last[0] = coords[0];
 				last[1] = coords[1];
-			}
+
 		}
 	}
 
@@ -95,13 +93,28 @@ public class TimeCube implements NavigableCube {
 	public Entry<Instant, Object> lowerEntry(Instant key) {
 		long idx = getIndex(key);
 		var cords = getCoords(idx);
-		if (cords[1] == 0) {
-			if (cords[0] == 0) {
-				return null;
+		while (true) {
+			if (cords[0] == first[0] && cords[1] == first[1]) {
+				return get(idx);
 			}
-			return arr[cords[0] - 1][size - 1];
+			if (cords[0] == 0 && cords[1] == 0) {
+				return get(idx);
+			}
+			if (cords[1] == 0) {
+				var result = arr[cords[0] - 1][size -1];
+				if (result != null) {
+					return result;
+				}
+				cords[0] = cords[0] - 1;
+				cords[1] = size -1;
+			} else {
+				var result = arr[cords[0]][cords[1] - 1];
+				if (result != null) {
+					return result;
+				}
+				cords[1] = cords[1] - 1;
+			}
 		}
-		return arr[cords[0]][cords[1] - 1];
 	}
 
 	@Override

@@ -36,8 +36,8 @@ public class TimeCubeTest {
     public void rangeTest() {
 
         var timeCube = new TimeCube();
-        timeCube.put(TimeCube.START, "START");
-        assertEquals(timeCube.get(TimeCube.START).getB(), "START");
+        timeCube.put(timeCube.getStart(), "START");
+        assertEquals(timeCube.get(timeCube.getStart()).getB(), "START");
 
         var now = Instant.now();
         timeCube.put(now, "NOW");
@@ -50,26 +50,6 @@ public class TimeCubeTest {
         var inTenYears = Instant.now().plus(Duration.ofDays(365 * 10));
         timeCube.put(inTenYears, "inTenYears");
         assertEquals(timeCube.get(inTenYears).getB(), "inTenYears");
-    }
-
-    @Test
-    public void testApp()
-    {
-
-        var arrList = new TimeCube();
-
-        List<Instant> keys = List.of(
-            Instant.now(),
-            Instant.now().plusSeconds(1)
-        );
-
-        for ( var instant : keys ) {
-            int index = new Random().nextInt(Integer.MAX_VALUE);
-            String value = "value " + index;
-            arrList.put(instant, value);
-			assertEquals(arrList.get(instant).getB(), value);
-        }
-
     }
 
     @Test

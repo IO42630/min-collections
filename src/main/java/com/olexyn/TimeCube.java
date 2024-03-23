@@ -13,6 +13,8 @@ public class TimeCube implements NavigableCube {
 	private final int size;
 	private final int precision;
 	private final AEntry<Instant, Object>[][] arr;
+	private final int[] first = new int[2];
+	private final int[] last = new int[2];
 
 	/**
 	 * Default values. Good for 2015-2043 with 10ms precision.
@@ -23,6 +25,10 @@ public class TimeCube implements NavigableCube {
 		this.size = 300000;
 		this.precision = 10;
 		this.arr = (AEntry<Instant, Object>[][]) new AEntry[size][];
+		this.first[0] = size;
+		this.first[1] = size;
+		this.last[0] = 0;
+		this.last[1] = 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -31,6 +37,8 @@ public class TimeCube implements NavigableCube {
 		this.size = size;
 		this.precision = precision;
 		this.arr = (AEntry<Instant, Object>[][]) new AEntry[size][];
+		this.first[0] = size;
+		this.first[1] = size;
 	}
 
 	private long getIndex(Instant instant) {
@@ -53,6 +61,18 @@ public class TimeCube implements NavigableCube {
 	private void put(long index, AEntry<Instant, Object> value) {
 		var coords = getCoords(index);
 		arr[coords[0]][coords[1]] = value;
+		if (first[0] >= coords[0]) {
+			first[0] = coords[0];
+			if (first[1] > coords[1]) {
+				first[1] = coords[1];
+			}
+		}
+		if (last[0] <= coords[0]) {
+			last[0] = coords[0];
+			if (last[1] < coords[1]) {
+				last[1] = coords[1];
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -82,6 +102,16 @@ public class TimeCube implements NavigableCube {
 			return arr[cords[0] - 1][size - 1];
 		}
 		return arr[cords[0]][cords[1] - 1];
+	}
+
+	@Override
+	public Entry<Instant, Object> firstEntry() {
+		return arr[first[0]][first[1]];
+	}
+
+	@Override
+	public Entry<Instant, Object> lastEntry() {
+		return arr[last[0]][last[1]];
 	}
 
 

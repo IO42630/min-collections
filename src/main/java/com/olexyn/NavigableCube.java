@@ -10,4 +10,8 @@ public interface NavigableCube {
 
 	Entry<Instant,Object> lowerEntry(Instant key);
 
+	Entry<Instant, Object> firstEntry();
+
+	Entry<Instant, Object> lastEntry();
+
 }

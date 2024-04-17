@@ -3,18 +3,17 @@
     <parent>
         <groupId>com.olexyn</groupId>
         <artifactId>min-root</artifactId>
-        <version>jdk17-0.0</version>
+        <version>17.0.0</version>
     </parent>
     <artifactId>min-collections</artifactId>
-    <version>0.0-SNAPSHOT</version>
+    <version>0.0</version>
     <packaging>jar</packaging>
-    <name>min-collections</name>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.olexyn</groupId>
                 <artifactId>min-bom</artifactId>
-                <version>jdk17-0.3</version>
+                <version>17.0.3</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
